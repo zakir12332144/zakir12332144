@@ -37,7 +37,7 @@ router.post('/', async (req, res) =>{
                 console.log(err);
                 res.status(500).json(error,'internal server error');
             }
-    
+
     })
     router.put('/:id', async (req, res) =>{
         try{
@@ -70,6 +70,7 @@ router.post('/', async (req, res) =>{
             console.log(err);
             res.status(500).json({error: 'internal server error'});
         }
+
     })
     // commit added
  module.exports = router;

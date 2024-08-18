@@ -1,12 +1,15 @@
+require('dotenv').config()
 const express = require('express')
 const app = express();
 const db = require('./db');
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
+const PORT = process.env.PORT || 3000;
 
 app.get('/', function (req, res) {
     res.send('welcome to world best hotel ... which type of food would you love to served by us')
 })
+console.log(process.env.KEY);
 // app.post('/person', async (req, res) =>{
 //     try{
 //      const data = req.body
@@ -48,6 +51,6 @@ app.get('/', function (req, res) {
 const personRoutes = require('./routes/personRoutes');
 app.use('/person',personRoutes);
 
-app.listen(3000, ()=>{
+app.listen(PORT, ()=>{
     console.log('listening on port 3000');
 })
