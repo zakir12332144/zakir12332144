@@ -1,15 +1,41 @@
-require('dotenv').config()
+// require('dotenv').config()
 const express = require('express')
 const app = express();
 const db = require('./db');
+const passport = require('passport');
+const localstrategy = require('passport-local').Strategy;
+const person = ("./models/person");
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
-const PORT = process.env.PORT || 3000;
+// const PORT = process.env.PORT || 3000;
 
-app.get('/', function (req, res) {
-    res.send('welcome to world best hotel ... which type of food would you love to served by us')
+const logRequest = (req, res, next) =>{
+    console.log(`[${new Date().toLocaleString()}] request made to : ${req.originalUrl}`);
+    next();
+}
+app.use(logRequest);
+passport.use(new localstrategy(async (username, password, done) => {
+    try{
+        console.log('Recieved credentials:', username, password);
+        const user = await person.findOne({username: username});
+        if(!user)
+            return done(null, false, {messege: 'Incorrect username.'});
+        const isPasswordMatch = user.password === password ? true : false;
+        if(isPasswordMatch){
+            return done(null, user);
+        }else{
+            return done(null, false, {messege: 'Incorrect password.'});
+        }
+    }catch(err){
+        return done (err);
+    }
+}))
+app.use(passport.initialize());
+
+app.get('/',passport.authenticate('local', {session : false}),function (req, res){
+    res.send('welcome to world best hotel...')
 })
-console.log(process.env.KEY);
+// console.log(process.env.KEY);
 // app.post('/person', async (req, res) =>{
 //     try{
 //      const data = req.body
@@ -51,6 +77,7 @@ console.log(process.env.KEY);
 const personRoutes = require('./routes/personRoutes');
 app.use('/person',personRoutes);
 
-app.listen(PORT, ()=>{
+app.listen(3000, ()=>{
     console.log('listening on port 3000');
+
 })

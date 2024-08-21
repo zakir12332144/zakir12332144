@@ -20,7 +20,7 @@ router.post('/', async (req, res) =>{
         res.status(200).json(data);
        }catch(err){
         console.log(err);
-        res.status(500).json(error,'internal server error');
+        res.status(500).json( error,'internal server error');
        }
     })
     router.get('/:workType', async(req, res) => {
